@@ -1,0 +1,12 @@
+name: hqs
+title: HQS
+username: sd13519
+account: sd13519
+server: rconnect.uu.deere.com
+hostUrl: https://rconnect.uu.deere.com/__api__
+appId: 663
+bundleId: 3412
+url: https://rconnect.uu.deere.com/content/663/
+when: 1559218594.58987
+asMultiple: FALSE
+asStatic: FALSE

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:se="http://svg-edit.googlecode.com" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="777" height="480">
+    <g class="currentLayer">
+        <title>Layer 1</title>
+		<rect fill="#ffffff" stroke="none" stroke-width="2" stroke-linejoin="round" stroke-dashoffset="" fill-rule="nonzero" id="svg_0" x="0" y="0" width="100%" height="80" style="color: rgb(256, 256, 256);"/>
+        <rect fill="#367c2b" stroke="none" stroke-width="2" stroke-linejoin="round" stroke-dashoffset="" fill-rule="nonzero" id="svg_1" x="0" y="80" width="100%" height="15" style="color: rgb(54, 124, 43);" class="" />
+        <rect fill="#ffde00" stroke="none" stroke-width="2" stroke-linejoin="round" stroke-dashoffset="" fill-rule="nonzero" id="svg_5" x="0" y="95" width="100%" height="5" style="color: rgb(255, 222, 0);" class="" />
+    </g>
+</svg>
