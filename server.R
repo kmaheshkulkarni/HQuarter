@@ -5,7 +5,6 @@ library(highcharter)
 library(plotly)
 
 
-
 server<-function(input, output, session){
   
   ################ User Details ###################
@@ -31,17 +30,6 @@ server<-function(input, output, session){
   #                      UID = "Jdaat_reporter",
   #                      PWD = "Jdaat2014"
   #   )
-  
-  ############### SQL Server Global Conenction ##########
-  
-  sql_data_con<-dbConnect(odbc::odbc(),
-                          Driver="SQL Server",
-                          Server ="fdxx90sqlvcl1.jdnet.deere.com",
-                          Database = "HX_AssemblyDataPool",
-                          port ="1433",
-                          UID = "Jdaat_reporter",
-                          PWD = "Jdaat2014"
-  )
   
   
   ############# Today TAB #####################
@@ -226,9 +214,6 @@ server<-function(input, output, session){
   ############## Station List  Craetion #######################
   
   output$hx_station_list_creation<-renderUI({
-    # qr<-paste0("Select distinct name from stations where deptid = (select deptid from departments where name ='",input$selected_dept,"' and archived_timestamp is null )")
-    # station_list<-dbGetQuery(sql_data_con,qr)
-    
     per_list_data_creation()
     selectInput("selected_station","Station",choices = as.list(unique(list_generate_data$STATION_NAME)),width = "80%")
   })
@@ -238,12 +223,6 @@ server<-function(input, output, session){
   
   
   output$hx_parameter_group_creation<-renderUI({
-    # qr<-paste0("Select name from dbo.station_parameter_groups where stationid=(Select stationid from stations 
-    #             where name='",input$selected_station,"'
-    #             and
-    #            archived_timestamp is null)
-    #            and archived_timestamp is null")
-    # parameter_group<-dbGetQuery(sql_data_con,qr)
     per_list_data_creation()
     parameter_group_list<-unique(list_generate_data[list_generate_data$STATION_NAME==input$selected_station,2])
     selectInput("selected_parameter_group","Parameter Group",choices = as.list(parameter_group_list),width = "90%")
@@ -253,22 +232,6 @@ server<-function(input, output, session){
   ############### Parameter List Creation ############################  
   
   output$hx_parameter_creation<-renderUI({
-    # qr<-paste0("Select name from ASSEMBLY_PARAMETERS  
-    #            where groupid in (Select groupid from dbo.station_parameter_groups 
-    #            where name='",input$selected_parameter_group,"' and archived_timestamp is null) 
-    #            and disabled_timestamp is null")
-    
-    # qr<-paste0("Select distinct ASSEMBLY_PARAMETERS.Name from ASSEMBLY_PARAMETERS inner join
-    #             ASSEMBLY_RESULTS_DATA with(NoLOCK)
-    #            on 
-    #            ASSEMBLY_PARAMETERS.ParameterID=ASSEMBLY_RESULTS_DATA.ParameterID
-    #            where ASSEMBLY_PARAMETERS.GroupID 
-    #            in 
-    #            (Select groupid from dbo.station_parameter_groups where name='",input$selected_parameter_group,"' and archived_timestamp is null) 
-    #            and ASSEMBLY_PARAMETERS.Disabled_Timestamp is null
-    #            and
-    #            ASSEMBLY_RESULTS_DATA.MaxValue<>''")
-    # parameter_name<-dbGetQuery(sql_data_con,qr)
     per_list_data_creation()
     parameter_name<-unique(list_generate_data[list_generate_data$PARAMETER_GROUP_NAME==input$selected_parameter_group,3])
     selectInput("selected_parameter","Parameter",choices = as.list(parameter_name),width = "90%")
@@ -422,9 +385,6 @@ server<-function(input, output, session){
   
   
   
-  
-  
-  
   ############# Tourque performance Data Gen #################
   
   tourque_performance_plt_gen<-eventReactive(input$top_get_data,{
@@ -493,25 +453,6 @@ server<-function(input, output, session){
     input$top_get_data
     tourque_performance_plt_gen()
   })
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
   
   
   
@@ -596,40 +537,13 @@ server<-function(input, output, session){
   
   
   
-  
-  
   ############### Parameter List Creation ############################  
   
   output$cap_parameter_creation<-renderUI({
-    # qr<-paste0("Select name from ASSEMBLY_PARAMETERS  
-    #            where groupid in (Select groupid from dbo.station_parameter_groups 
-    #            where name='",input$selected_parameter_group,"' and archived_timestamp is null) 
-    #            and disabled_timestamp is null")
-    
-    # qr<-paste0("Select distinct ASSEMBLY_PARAMETERS.Name from ASSEMBLY_PARAMETERS inner join
-    #             ASSEMBLY_RESULTS_DATA with(NoLOCK)
-    #            on 
-    #            ASSEMBLY_PARAMETERS.ParameterID=ASSEMBLY_RESULTS_DATA.ParameterID
-    #            where ASSEMBLY_PARAMETERS.GroupID 
-    #            in 
-    #            (Select groupid from dbo.station_parameter_groups where name='",input$selected_parameter_group,"' and archived_timestamp is null) 
-    #            and ASSEMBLY_PARAMETERS.Disabled_Timestamp is null
-    #            and
-    #            ASSEMBLY_RESULTS_DATA.MaxValue<>''")
-    # parameter_name<-dbGetQuery(sql_data_con,qr)
     cap_list_data_creation()
     parameter_name<-unique(cap_list_generate_data[cap_list_generate_data$PARAMETER_GROUP_NAME==input$selected_parameter_group_cap,3])
     selectInput("selected_parameter_cap","Parameter",choices = as.list(parameter_name),width = "95%")
   })
-  
-  
-  
-  
-  
-  
-  
-  
-  
   
   
   
@@ -1457,12 +1371,6 @@ server<-function(input, output, session){
   
   
   
-  
-  
-  
-  
-  
-  
   ################ Top 10 Comments in Override #############
   
   overrides_by_comment_plot<-eventReactive(input$get_or_data,{
@@ -1541,8 +1449,37 @@ server<-function(input, output, session){
   })  
   
   
+  ############################################### Report #####################################################
   
+  output$FlexD <- downloadHandler(
+    filename = function(){
+      paste('SPC Report-', Sys.time(), '.html', sep = '')
+    },
+    content = function(file) {
+      params <- list(histogram = chart, normal_dist = FD, saved_control_chart = saved_control_chart, 
+                     QQ_Plot = QQ_Plot, Box_chart = Box_chart, pc_plot = pc_plot, interpretation_table = interpretation_table)
+      src <- normalizePath('FlexD.Rmd')
+      owd <- setwd(tempdir())
+      on.exit(setwd(owd))
+      file.copy(src, 'FlexD.Rmd', overwrite = TRUE)
+      out <- rmarkdown::render('FlexD.Rmd', output_format = flexdashboard::flex_dashboard())
+      file.rename(out, file)
+    }
+  )
   
-  
-  
+  output$Word <- downloadHandler(
+    filename = function(){
+      paste('Report-', Sys.time(), '.docx', sep = '')
+    },
+    content = function(file) {
+      params <- list(histogram = chart, normal_dist = FD, saved_control_chart = saved_control_chart, 
+                     QQ_Plot = QQ_Plot, Box_chart = Box_chart, pc_plot = pc_plot, interpretation_table = interpretation_table)
+      src <- normalizePath('Word.Rmd')
+      owd <- setwd(tempdir())
+      on.exit(setwd(owd))
+      file.copy(src, 'Word.Rmd', overwrite = TRUE)
+      out <- rmarkdown::render('Word.Rmd', "word_document")
+      file.rename(out, file)
+    }
+  )
 }

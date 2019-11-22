@@ -15,35 +15,20 @@ library(waiter)
 # npm config set registry https://npm.pkg.github.com/kmaheshkulkarni
 
 bs4DashPage(
+  enable_preloader = TRUE,
   title = "HQS",
   sidebar_collapsed = TRUE,
   #loading_duration = 1,
-  navbar = bs4DashNavbar(
+  navbar = dashboardHeader(
     
-    leftUi = img(src="TEXT.png",width = 200,height=60),
-    
-    rightUi = bs4DropdownMenu(
-      show = FALSE,
-      labelText = "!",
-      status = "danger",
-      src = img(src="img/General Logo.png"),
-      bs4DropdownMenuItem(
-        text = "message 1",
-        date = "today"
-      ),
-      bs4DropdownMenuItem(
-        text = "message 2",
-        date = "yesterday"
-      )
-    ),
-    bs4UserMenu(
-      name = uiOutput("user_info"), 
-      status = "primary",
-      title = "HQS",
-      subtitle = "Author", 
-      footer = p("The footer", class = "text-center"),
-      "This is the menu content."
-    ),
+    leftUi = img(src="s.png",width = 170,height=59),
+    rightUi = 
+    #   bs4DropdownMenu(
+    #   show = FALSE,
+    #   labelText = "!",
+    #   status = "danger",
+    #   src = img(src="img/General Logo.png"),
+    # )
     # John Deere Logo in the upper right corner
     # tags$li(
     #   class = "dropdown",
@@ -73,7 +58,7 @@ bs4DashPage(
       bs4SidebarMenuItem(text = "Live Monitoring",tabName = "dashboard",icon = "calendar"),
       bs4SidebarMenuItem(text = "SPC Dashboard",tabName = "performance",icon = "dashboard"),
       bs4SidebarMenuItem(text = "Override Performance",tabName = "over_per",icon = "briefcase"),
-      bs4SidebarMenuItem(text = "Report Download",tabName="cap",icon = "expand")
+      bs4SidebarMenuItem(text = "Report Download",tabName="Report",icon = "expand")
     )
   ),
   
@@ -115,19 +100,22 @@ bs4DashPage(
       bs4TabItem(tabName = "dashboard",
               fluidRow(
                 column(3,
-                       bs4Card(title = "Today's OverRide",width = 12,solidHeader = TRUE,status="info", maximizable = TRUE,
+                       bs4Card(title = "Today's OverRide",width = 12,solidHeader = TRUE,status="info", 
+                               maximizable = TRUE, closable = FALSE,
                            withLoader(highchartOutput("oc_count_plot"),type = "html",loader = "loader3")  
                        )
                 ),
                 
                 column(9,
-                       bs4Card(title = " Top 10 Overrideded Parameter",width = 12,solidHeader = TRUE,status="info", maximizable = TRUE,
+                       bs4Card(title = " Top 10 Overrideded Parameter",width = 12,solidHeader = TRUE,status="info", 
+                               maximizable = TRUE, closable = FALSE,
                            withLoader(highchartOutput("oc_parameter_plot"),type = "html",loader = "loader3") 
                        )
                 )
               ),
               fluidRow(
-                bs4Card(title = "Top 25 Over and Under Specfication ",width = 12,solidHeader = TRUE,status="info", maximizable = TRUE,
+                bs4Card(title = "Top 25 Over and Under Specfication ",width = 12,solidHeader = TRUE,status="info", 
+                        maximizable = TRUE, closable = FALSE,
                     withLoader(highchartOutput("over_under_specification_plot"), type = "html",loader = "loader3") 
                 )
               )
@@ -138,7 +126,8 @@ bs4DashPage(
       ############ TOP UI #########################
       tabItem(tabName = "performance",
               fluidRow(
-                bs4Card(title = "Control Panel",width = 12,solidHeader = TRUE,status="info", maximizable = TRUE,
+                bs4Card(title = "Control Panel",width = 12,solidHeader = TRUE,status="info", 
+                        maximizable = TRUE, closable = FALSE,
                     column(2, uiOutput("hx_dept_list_creation")),
                     column(3, uiOutput("hx_station_list_creation")),
                     column(2, uiOutput("hx_parameter_group_creation")),
@@ -171,20 +160,22 @@ bs4DashPage(
               ######################## PLots #############################
               
               fluidRow(
-                bs4Card(title = "Performance",solidHeader = TRUE,width = '12',collapsible = TRUE,height = 'auto',status="warning", maximizable = TRUE,
+                bs4Card(title = "Control Chart",solidHeader = TRUE,width = '12',collapsible = TRUE,height = 'auto',
+                        status="warning", maximizable = TRUE, closable = FALSE,
                     withLoader(plotlyOutput("tourque_performance",height = 700) ,type = "html",loader = "loader10") 
                     #withLoader(highchartOutput("tourque_performance",height = 700) ,type = "html",loader = "loader10") 
                 )
               ),
-              fluidRow(
-                bs4Card(title = "Performance",width = 12,solidHeader = TRUE,status="info", maximizable = TRUE,
-                        withLoader(highchartOutput("runner_chart") ,type = "html",loader = "loader3") 
-                )
-              ),
+              # fluidRow(
+              #   bs4Card(title = "Performance",width = 12,solidHeader = TRUE,status="info", maximizable = TRUE,
+              #           withLoader(highchartOutput("runner_chart") ,type = "html",loader = "loader3") 
+              #   )
+              # ),
               
               fluidRow(
                 column(7,
-                       bs4Card(title = "Statistics",width = 12,solidHeader = TRUE,status="info", maximizable = TRUE,
+                       bs4Card(title = "Normal Distribution",width = 12,solidHeader = TRUE,status="info", 
+                               maximizable = TRUE, closable = FALSE,
                                fluidRow(
                                  column(12,
                                         withLoader(plotlyOutput("density_plot") ,type = "html",loader = "loader3") 
@@ -193,7 +184,8 @@ bs4DashPage(
                        )
                 ),
                 column(5,
-                       bs4Card(title = "Performance Index",width = 12,solidHeader = TRUE,status="info", maximizable = TRUE,
+                       bs4Card(title = "Process Capability Interpretation",width = 12,solidHeader = TRUE,status="info", 
+                               maximizable = TRUE, closable = FALSE,
                                withLoader(highchartOutput("performance_index"),type = "html",loader = "loader3") 
                        )
                 )
@@ -207,62 +199,33 @@ bs4DashPage(
       
       
       
-      ####################### Capabilities TAB #################
+      ####################### Report TAB #################
       
-      ############# Top UI #######################
-      # tabItem(tabName = "cap",
-      #         
-      #         fluidRow(
-      #           bs4Card(title = "Control Panel",width = 12,solidHeader = TRUE,status="info", maximizable = TRUE,
-      #               column(2,
-      #                      
-      #                      withLoader(uiOutput("cap_dept_list_creation"),type = "html",loader = "loader4",
-      #                                 proxy.height ="50px" 
-      #                      )  
-      #                      
-      #               ),
-      #               column(3,
-      #                      
-      #                      withLoader(uiOutput("cap_station_list_creation"),type = "html",loader = "loader4",
-      #                                 proxy.height ="50px" 
-      #                      )
-      #               ),
-      #               column(2,
-      #                      
-      #                      withLoader(uiOutput("cap_parameter_group_creation") ,type = "html",loader = "loader4",
-      #                                 proxy.height ="50px" 
-      #                      )
-      #               ),
-      #               column(2,
-      #                      
-      #                      withLoader(uiOutput("cap_parameter_creation") ,type = "html",loader = "loader4",
-      #                                 proxy.height ="50px" 
-      #                      )
-      #               ),
-      #               column(2,
-      #                      align="center",
-      #                      airDatepickerInput(
-      #                        inputId = "cap_selected_date_range",
-      #                        label = "Day",
-      #                        value = Sys.Date(),
-      #                        maxDate =  Sys.Date()
-      #                      )
-      #               ),
-      #               column(1,
-      #                      align="center",
-      #                      HTML('<br/>'),
-      #                      actionButton("cap_top_get_data","Get Data")
-      #               )
-      #               
-      #           )
-      #         ),
-      #         
-      #           
-      # ),
-      ############# Runner Plot ####################
-      
-      
-      
+      tabItem(tabName = "Report",
+                 fluidRow(
+                   bs4Card(title = "Control Chart",solidHeader = TRUE,width = '12',collapsible = FALSE,height = 'auto',status="warning", 
+                           maximizable = TRUE, closable = FALSE,
+                           withLoader(plotlyOutput("tourque_performance",height = 700) ,type = "html",loader = "loader10") 
+                   )
+                 ),
+                 
+                 fluidRow(
+                   column(7, bs4Card(title = "Normal Distribution",width = 12,solidHeader = TRUE,status="info", 
+                                     maximizable = TRUE, closable = FALSE, collapsible = FALSE,
+                                  withLoader(plotlyOutput("density_plot") ,type = "html",loader = "loader3"))
+                          ),
+                   column(5, bs4Card(title = "Process Capability Interpretation",width = 12,solidHeader = TRUE,status="info", 
+                                     maximizable = TRUE, closable = FALSE, collapsible = FALSE,
+                                     withLoader(highchartOutput("performance_index"),type = "html",loader = "loader3") 
+                   )
+                   )
+                   ),
+              fluidRow(
+                downloadButton('FlexD', label = "HTML"),
+                downloadButton('Word', label = "WORD")
+              )
+                 
+       ),
       
       
       
@@ -271,7 +234,8 @@ bs4DashPage(
       ###################### Top UI #################
       tabItem(tabName = "over_per",
               fluidRow(
-                bs4Card(title = "Control Panel",solidHeader = TRUE,width = '12',collapsible = TRUE,height = 'auto',status="info", maximizable = TRUE,
+                bs4Card(title = "Control Panel",solidHeader = TRUE,width = '12',collapsible = TRUE,height = 'auto',status="info", 
+                        maximizable = TRUE, closable = FALSE,
                     fluidRow(
                       column(2,
                              align="center",
@@ -327,12 +291,14 @@ bs4DashPage(
               ############  All charts #############          
               fluidRow(
                 column(6,
-                       bs4Card(title = "Top 10 Parameter in OverRide",solidHeader = TRUE,width = '12',collapsible = TRUE,height = 'auto',status="success", maximizable = TRUE,
+                       bs4Card(title = "Top 10 Parameter in OverRide",solidHeader = TRUE,width = '12',collapsible = TRUE,height = 'auto',
+                               status="success", maximizable = TRUE, closable = FALSE,
                            withLoader(highchartOutput("parameter_issue"),type = "html",loader = "dnaspin")  
                        )
                 ),
                 column(6,
-                       bs4Card(title = "Top 10 Station in OverRide ",solidHeader = TRUE,width = '12',collapsible = TRUE,height = 'auto',status="success", maximizable = TRUE,
+                       bs4Card(title = "Top 10 Station in OverRide ",solidHeader = TRUE,width = '12',collapsible = TRUE,height = 'auto',
+                               status="success", maximizable = TRUE, closable = FALSE,
                            withLoader( highchartOutput("overrides_by_station"),type = "html",loader = "dnaspin")  
                        )
                 )
@@ -340,12 +306,14 @@ bs4DashPage(
               ),
               fluidRow(
                 column(6,
-                       bs4Card(title = "Top 10 Department in OverRide",solidHeader = TRUE,width = '12',collapsible = TRUE,height = 'auto',status="success", maximizable = TRUE,
+                       bs4Card(title = "Top 10 Department in OverRide",solidHeader = TRUE,width = '12',collapsible = TRUE,height = 'auto',
+                               status="success", maximizable = TRUE, closable = FALSE,
                            withLoader( highchartOutput("overrides_by_department"),type = "html",loader = "dnaspin")  
                        )
                 ),
                 column(6,
-                       bs4Card(title = "Top 10 OverRide Code in OverRide",solidHeader = TRUE,width = '12',collapsible = TRUE,height = 'auto',status="success", maximizable = TRUE,
+                       bs4Card(title = "Top 10 OverRide Code in OverRide",solidHeader = TRUE,width = '12',collapsible = TRUE,height = 'auto',
+                               status="success", maximizable = TRUE, closable = FALSE,
                            withLoader(highchartOutput("overrides_by_person"),type = "html",loader = "dnaspin") 
                        )
                 )
@@ -353,12 +321,14 @@ bs4DashPage(
               ),
               fluidRow(
                 column(6,
-                       bs4Card(title = "Top 10 OverRide Code in OverRide",solidHeader = TRUE,width = '12',collapsible = TRUE,height = 'auto',status="success", maximizable = TRUE,
+                       bs4Card(title = "Top 10 OverRide Code in OverRide",solidHeader = TRUE,width = '12',collapsible = TRUE,height = 'auto',
+                               status="success", maximizable = TRUE, closable = FALSE,
                            withLoader( highchartOutput("overrides_by_oc_code"),type = "html",loader = "dnaspin")  
                        )
                 ),
                 column(6,
-                       bs4Card(title = "Top 10 Comment in OverRide",solidHeader = TRUE,width = '12',collapsible = TRUE,height = 'auto',status="success", maximizable = TRUE,
+                       bs4Card(title = "Top 10 Comment in OverRide",solidHeader = TRUE,width = '12',collapsible = TRUE,height = 'auto',
+                               status="success", maximizable = TRUE, closable = FALSE,
                            withLoader(highchartOutput("overrides_by_comment"),type = "html",loader = "dnaspin") 
                        )
                 )

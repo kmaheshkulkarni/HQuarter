@@ -1,4 +1,22 @@
 .sidebar-light-primary .nav-sidebar>.nav-item>.nav-link.active {
-    color: #ffe810;
-    background-color: #387C2B;
+    color: #feda15;
+    background-color: #000000;
+}
+
+.card-header {
+    background-color: #000000;
+    border-bottom: 1px solid #000000;
+    padding: .75rem 1.25rem;
+    position: relative;
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+    color: #feda14;
+}
+
+.card-warning.card-outline {
+    border-top: 2px solid #feda14;
+}
+
+.card-info.card-outline {
+    border-top: 2px solid #feda14;
 }
